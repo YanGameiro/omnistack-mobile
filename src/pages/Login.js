@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Image, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
 import logo from '../assets/logo1.png';
+import api from '../services/api';
 
 const Login = () => {
+
+    const [ email, setEmail ] = useState('');
+    const [ techs, setTechs ] = useState('');
+
+    const handleSubmit = async () => {
+        const response = await api.post('/sessions', {
+            email
+        });
+
+        const { _id } = response.data;
+
+        console.log(_id);
+    }
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
-            <Text>aaaaaaaa</Text>
             <Image source={logo}></Image>
             <View style={styles.form}>
                 <Text style={styles.label}>Email</Text>
@@ -17,6 +30,8 @@ const Login = () => {
                     keyboardType='email-address'
                     autoCapitalize="none"
                     autoCorrect={false}
+                    value={email}
+                    onChangeText={setEmail}
                 />
                 <Text style={styles.label}>Techs</Text>
                 <TextInput
@@ -25,9 +40,11 @@ const Login = () => {
                     placeholderTextColor='#999999'
                     autoCapitalize="words"
                     autoCorrect={false}
+                    value={techs}
+                    onChangeText={setTechs}
                 />
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity onPress={handleSubmit} style={styles.button}>
                     <Text style={styles.buttonText}>Find Spots</Text>
                 </TouchableOpacity>
             </View>
