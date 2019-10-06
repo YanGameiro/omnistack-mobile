@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, Image, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, AsyncStorage, KeyboardAvoidingView, Image, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
 import logo from '../assets/logo1.png';
 import api from '../services/api';
 
-const Login = () => {
+const Login = ({navigation}) => {
 
     const [ email, setEmail ] = useState('');
     const [ techs, setTechs ] = useState('');
+
+    useEffect(()=>{
+        AsyncStorage.getItem('user').then(user => {
+            if(user) {
+                navigation.navigate('List');
+            }
+        })
+    }, []);
 
     const handleSubmit = async () => {
         const response = await api.post('/sessions', {
@@ -16,7 +24,10 @@ const Login = () => {
 
         const { _id } = response.data;
 
-        console.log(_id);
+        await AsyncStorage.setItem('user', _id);
+        await AsyncStorage.setItem('techs', techs);
+
+        navigation.navigate('List');
     }
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
