@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import socketio from 'socket.io-client';
 import { Alert, SafeAreaView, Image, AsyncStorage, StyleSheet, ScrollView } from 'react-native';
+import env from '../../env.js';
 
 import logo from '../assets/logo1.png'
 import SpotList from '../components/SpotList'
@@ -10,7 +11,7 @@ const List = () => {
 
     useEffect(() => {
         AsyncStorage.getItem('user').then(user_id => {
-            const socket = socketio('http://192.168.0.146:3333', {
+            const socket = socketio(env.API_URL, {
                 query: { user_id  }
             });
             socket.on('booking_response', booking => {
