@@ -10,7 +10,7 @@ const List = () => {
 
     useEffect(() => {
         AsyncStorage.getItem('user').then(user_id => {
-            const socket = socketio('http://192.168.0.9:3333', {
+            const socket = socketio('http://192.168.0.146:3333', {
                 query: { user_id  }
             });
             socket.on('booking_response', booking => {
