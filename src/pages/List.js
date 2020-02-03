@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import socketio from 'socket.io-client';
-import { Alert, SafeAreaView, Image, AsyncStorage, StyleSheet, ScrollView } from 'react-native';
+import { Text, Alert, SafeAreaView, Image, AsyncStorage, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import env from '../../env.js';
 
 import logo from '../assets/logo1.png'
 import SpotList from '../components/SpotList'
 
-const List = () => {
+const List = ({ navigation }) => {
     const [techs, setTechs] = useState([]);
 
     useEffect(() => {
@@ -28,9 +28,18 @@ const List = () => {
         });
     }, []);
 
+    async function handleLogOut() {
+        await AsyncStorage.setItem('user', '');
+        await AsyncStorage.setItem('techs', '');
+        navigation.navigate('Login');
+    };
+
     return (
         <SafeAreaView style={styles.container} >
             <Image style={styles.logo} source={logo}/>
+            <TouchableOpacity onPress={() => handleLogOut()} style={styles.buttonLogOut}>
+                <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
             <ScrollView>
                 {techs.map(tech => <SpotList key={tech} tech={tech} />)}
             </ScrollView>
@@ -47,6 +56,15 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         alignSelf: 'center',
         marginTop: 10
+    },
+    buttonLogOut: {
+        height: 32,
+        width: 200,
+        backgroundColor: '#FF0000',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 2,
+        marginTop: 10,
     }
 });
 
